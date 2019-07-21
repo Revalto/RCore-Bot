@@ -1,12 +1,13 @@
 const MongoClient = require("mongodb").MongoClient;
-const ObjectID    = require("mongodb").ObjectID;
+const ObjectID = require("mongodb").ObjectID;
+const config = require("../config.js");
 
 var state = {
   db: null
 };
-const mongoClient = new MongoClient("mongodb://localhost:27017/", { useNewUrlParser: true });
+const mongoClient = new MongoClient(config.urlDB, { useNewUrlParser: true });
 
-exports.connect = function (url, done) {
+exports.connect = function (done) {
   if(state.db) {
     return done();
   }
@@ -21,7 +22,7 @@ exports.connect = function (url, done) {
 }
 
 exports.get = function() {
-  return state.db;
+  return state.db.db(config.nameDB);
 }
 
 exports.obj = function() {

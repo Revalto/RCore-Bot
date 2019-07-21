@@ -1,7 +1,8 @@
 module.exports = {
   tag: ["помощь"],
   button: ["help"],
-  func: async(context, { Keyboard }) => {
+  func: async(context, { vk }) => {
+    var Keyboard = vk.get().Keyboard;
     await context.send({
   		message: `Текст сообщения`,
   		keyboard: Keyboard.keyboard([
