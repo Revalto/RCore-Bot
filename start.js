@@ -13,9 +13,11 @@ const cmds = fs.readdirSync(`${__dirname}/cmds/`).filter((name) => /\.js$/i.test
 /* ------------------------- [ Бот ]  ------------------------- */
 
 vk.setHook(['new_message', 'edit_message'], async(context) => {
-	console.log(context);
+	if (context.senderId < 1 || context.isOutbox) {
+		return;
+	} console.log(context);
 
-	var _user = await user.getUser(context.senderId, context.peerId);
+	var _user = await user.getUser(context.senderId);
 
 	let cmd = cmds.find( context.messagePayload && context.messagePayload.command ? (cmd => cmd.bregexp ? cmd.bregexp.test(context.messagePayload.command) : (new RegExp(`^\\s*(${cmd.button.join('|')})`, "i")).test(context.messagePayload.command)):(cmd => cmd.regexp ? cmd.regexp.test(context.text) : (new RegExp(`^\\s*(${cmd.tag.join('|')})`, "i")).test(context.text)) );
 	if(!cmd) return (!context.isChat ? context.send('&#128213; | Команда не найдена | Напишите "Начать"'):'');

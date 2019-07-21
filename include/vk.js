@@ -24,8 +24,6 @@ exports.get = function() {
 
 exports.setHook = function(obj, done) {
   vk.updates.on(obj, async(context) => {
-  	if (context.senderId < 1 || context.isOutbox) {
-  		return;
-  	} done(context);
+  	done(context);
   });
 }

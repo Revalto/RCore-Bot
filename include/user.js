@@ -2,7 +2,7 @@ const db = require('./db');
 const vk = require('./vk');
 
 module.exports = {
-  getUser: function (uid, conversation) {
+  getUser: function (uid) {
     return new Promise((resolve, reject) => {
       db.get().collection('users').findOne({ uid: Number(uid) }, function(err, doc) {
         if(err) { return reject(err); }
@@ -15,7 +15,6 @@ module.exports = {
 
             var userInfo = {
               uid: Number(uid),
-              conversation: Number(conversation),
               name: user.first_name,
               right: 0,
               firstMessage: Math.floor(new Date() / 1000)
@@ -25,7 +24,7 @@ module.exports = {
               if(err) {
                 return console.log(`[ RCORE ]: Ошибка при добавлении пользователя (MongoDB)`, err);
               }
-              console.log(`[ RCORE ]: Зарегистрирован новый пользователь! UID: ${userInfo.uid} | peerId: ${userInfo.conversation} | Name: ${userInfo.name}`);
+              console.log(`[ RCORE ]: Зарегистрирован новый пользователь! UID: ${userInfo.uid} | Name: ${userInfo.name}`);
             });
 
             return resolve(userInfo);
@@ -36,7 +35,7 @@ module.exports = {
       });
     });
   },
-  isUser: function(uid, conversation) {
+  isUser: function(uid) {
     return new Promise((resolve, reject) => {
       db.get().collection('users').findOne({ uid: Number(uid) }, function(err, doc) {
         if(err) { return reject(err); }
@@ -44,7 +43,7 @@ module.exports = {
       });
     });
   },
-  updateUser: function(uid, conversation, obj) {
+  updateUser: function(uid, obj) {
     db.get().collection('users').updateOne({ uid: Number(uid) }, { $set: obj }, function(err, result) {
       if(err) { return console.log(`[ RCORE ]: Ошибка при обновление данных юзера (MongoDB)`, err); }
     });
