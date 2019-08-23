@@ -11,7 +11,7 @@ module.exports = {
 
     let userInfo = {
       uid: Number(uid),
-      name: user.first_name,
+      name: vkUser[0].first_name,
       right: 0,
       firstMessage: Math.floor(new Date() / 1000)
     }; db.get().collection('users').insertOne(userInfo);
