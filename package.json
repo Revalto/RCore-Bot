@@ -1,0 +1,32 @@
+{
+  "name": "rcore-bot",
+  "version": "1.0.0",
+  "description": "VKBOT",
+  "main": "start.js",
+  "scripts": {
+    "test": "start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Revalto/RCore-Bot.git"
+  },
+  "keywords": [
+    "vk-io",
+    "vkbot",
+    "revalto",
+    "vk",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "Revalto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Revalto/RCore-Bot/issues"
+  },
+  "homepage": "https://github.com/Revalto/RCore-Bot#readme",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "mongodb": "^3.5.7",
+    "vk-io": "^4.0.0-rc.30"
+  }
+}
