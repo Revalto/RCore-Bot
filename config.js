@@ -1,13 +1,7 @@
-const groupToken 	= 'Токен вашей группы';
-const groupID 	 	= ID вашей группы;
+const token 	              = 'Токен';
+const pollingGroupId 	      = 1;
 
-const urlDB 	= 'mongodb://localhost:27017/';
-const nameDB  = 'rcore'
+const urlDB 	              = 'mongodb://localhost:27017/';
+const nameDB                  = 'rcore'
 
-module.exports = {
-  groupToken,
-  groupID,
-
-  urlDB,
-  nameDB
-};
+module.exports = { token, pollingGroupId, urlDB, nameDB };

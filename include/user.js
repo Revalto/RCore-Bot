@@ -1,24 +1,30 @@
 const db = require('./db');
-const vk = require('./vk');
 
 module.exports = {
-  getUser: async(uid) => {
-    let _user = await db.get().collection('users').findOne({ uid: Number(uid) });
-    if(_user != null) return _user;
+  get: async(context) => {
+      const uid = Number(context.senderId);
+      const user = await db.get().collection('users').findOne({ uid });
 
-    let vkUser = await vk.get()._vk.api.call('users.get', { user_ids: Number(uid), fields: 'name,lastname,sex,photo_100' });
-    if(!vkUser || !vkUser[0]) { return false; }
+      if(user != null) {
+          return user;
+      }
 
-    let userInfo = {
-      uid: Number(uid),
-      name: vkUser[0].first_name,
-      right: 0,
-      firstMessage: Math.floor(new Date() / 1000)
-    }; db.get().collection('users').insertOne(userInfo);
-    return userInfo;
-  },
+      const VkUserInfo = await context.vk.api.call('users.get', {
+         user_ids: uid,
+      });
 
-  isUser: async(uid) => {
-    return (await db.get().collection('users').findOne({ uid: Number(uid) }) == null ? false : true);
-  },
+      if(!VkUserInfo || !VkUserInfo[0]) {
+          return false;
+      }
+
+      const userInfo = {
+          uid,
+          name: VkUserInfo[0].first_name,
+          right: 0,
+          firstMessage: Math.floor(new Date() / 1000)
+      };
+
+      db.get().collection('users').insertOne(userInfo);
+      return userInfo;
+  }
 }

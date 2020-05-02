@@ -1,18 +1,15 @@
+const { VK, Keyboard } = require('vk-io');
 const fs = require('fs');
-const colors = require('colors');
+const { db, user, util } = require('./include');
 
-const config = require("./config.js");
-const db = require('./include/db');
-const vk = require('./include/vk');
-const util = require('./include/util');
-
-const user = require('./include/user');
+const { token, pollingGroupId } = require("./config.js");
+const vk = new VK({ token,  pollingGroupId });
 
 const cmds = fs.readdirSync(`${__dirname}/cmds/`).filter((name) => /\.js$/i.test(name)).map((name) => require(`${__dirname}/cmds/${name}`));
 
 /* ------------------------- [ Бот ]  ------------------------- */
 
-vk.setHook(['new_message', 'edit_message'], async(context) => {
+vk.updates.on(['new_message', 'edit_message'], async(context) => {
 	if (context.senderId < 1 || context.isOutbox) {
 		return;
 	} console.log(context);
@@ -21,22 +18,23 @@ vk.setHook(['new_message', 'edit_message'], async(context) => {
 	if(!cmd) return (!context.isChat ? context.send('&#128213; | Команда не найдена | Напишите "Начать"'):'');
 	else cmd["cmd"] = (context.messagePayload && context.messagePayload.command ? context.messagePayload.command : context.text);
 
-	var _user = await user.getUser(context.senderId);
+	context.user = await user.get(context);
 
-	await cmd.func(context, { db, util, user, _user, cmd, cmds, vk, cmd, fs }).then(() => {}).catch((e) => {
+	await cmd.func(context, { db, util, user, cmd, cmds, VK, Keyboard, cmd, fs }).then(() => {}).catch((e) => {
 		console.log(`Ошибка:\n${e}`.red.bold);
 	});
-})
+});
 
 async function run() {
-  await db.connect(function(err) {
-    if(err) { return console.log(`[ RCORE ] Ошибка подключения к базе данных! (MongoDB)`, err); }
-    console.log(`[ RCORE ] Успешно подключен к базе данных! (MongoDB)`);
-  });
+	await db.connect(function(err) {
+		if(err) { return console.log(`[ RCORE ] Ошибка подключения к базе данных! (MongoDB)`, err); }
+		console.log(`[ RCORE ] Успешно подключен к базе данных! (MongoDB)`);
+	});
 
-	await vk.connect(function(err) {
-		if(err) { return console.log(`[ RCORE ] Ошибка подключения! (VK)`, err); }
-		console.log(`[ RCORE ] Успешно подключен! (VK)`)
+	vk.updates.start().then(() => {
+		console.log(`[ RCORE ] Успешно подключен! (VK)`);
+	}).catch(err => {
+		console.log(`[ RCORE ] Ошибка подключения! (VK)`, err);
 	});
 
 	console.log(`[ RCORE ] Бот успешно запущен и готов к работе!`);

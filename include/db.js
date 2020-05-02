@@ -7,24 +7,26 @@ var state = {
 };
 const mongoClient = new MongoClient(config.urlDB, { useNewUrlParser: true });
 
-exports.connect = function (done) {
-  if(state.db) {
-    return done();
-  }
+module.exports = {
+    connect: (done) => {
+        if(state.db) {
+            return done();
+        }
 
-  mongoClient.connect(function(err, db){
-    if(err) {
-      return done(err);
+        mongoClient.connect(function(err, db){
+            if(err) {
+                return done(err);
+            }
+            state.db = db;
+            done();
+        })
+    },
+
+    get: () => {
+        return state.db.db(config.nameDB);
+    },
+
+    obj: () => {
+        return ObjectID;
     }
-    state.db = db;
-    done();
-  })
-}
-
-exports.get = function() {
-  return state.db.db(config.nameDB);
-}
-
-exports.obj = function() {
-  return ObjectID;
 }
