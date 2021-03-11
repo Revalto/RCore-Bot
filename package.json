@@ -25,8 +25,13 @@
   },
   "homepage": "https://github.com/Revalto/RCore-Bot#readme",
   "dependencies": {
+    "common-tags": "^1.8.0",
     "fs": "0.0.1-security",
+    "glob": "^7.1.6",
     "mongodb": "^3.5.7",
-    "vk-io": "^4.0.0-rc.30"
+    "mongoose": "^5.11.20",
+    "node-vkcoinapi": "^1.8.0",
+    "vk-io": "^4.0.0-rc.30",
+    "vk-io-question-fix": "^2.0.2"
   }
 }
